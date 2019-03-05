@@ -1,17 +1,21 @@
 $(function() {
     $("#login").click(function() {
         $.ajax({
+            type: 'post',
+            contentType: 'application/json;charset=utf-8',
             url: "/game/login",
-            data: {
+            data: JSON.stringify({
                 userName: $("#userName").val(),
                 password: $("#password").val()
+            }),
+            success: function(data) {
+                var user = data.result.user;
+                sessionStorage.setItem("userName", user.userName);
+                sessionStorage.setItem("user", user);
+                window.location.href = "roomChoose.html";
             },
-            success: function() {
-                window.location.href = "roomChoose.html?userName=" + $("#userName").val();
-            },
-            error: function() {
-                window.location.href = "login.html";
-                layer.alert("登录失败");
+            error: function(data) {
+                layer.alert("登录失败: " + data.responseJSON.message);
             }
         });
     });

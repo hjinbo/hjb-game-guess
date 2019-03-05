@@ -1,18 +1,17 @@
 $(function() {
+    
+    initPage();
+
+    function initPage() {
+        var userName = sessionStorage.getItem("userName");
+        if (userName === null || userName === undefined) {
+            window.location.href = "login.html";
+        }
+    }
+
     $("#access").click(function() {
-        var userName = location.userName;
-        $.ajax({
-            url: "/game/roomChoose",
-            data: {
-                roomName: $("#roomName").val()
-            },
-            success: function() {
-                window.location.href = "index.html?userName=" + userName + "&roomName=" + $("#roomName").val();
-            },
-            error: function() {
-                window.loccation.href = "roomChoose?userName=" + userName;
-                layer.alert("进入房间失败");
-            }
-        });
+        var roomName = $("#roomName").val();
+        sessionStorage.setItem("roomName", roomName);
+        window.location.href = "index.html";
     });
 })

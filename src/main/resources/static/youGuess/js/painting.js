@@ -21,6 +21,21 @@ $(function() {
     var painter = '';
     var result = false;
 
+    initPage();
+    createWebSocket();
+
+    function initPage() {
+        init();
+        userName = sessionStorage.getItem("userName");
+        if (userName === null || userName === undefined) {
+            window.location.href = "login.html";
+        }
+        roomName = sessionStorage.getItem("roomName");
+        if (roomName === null || roomName === undefined) {
+            window.location.href = "roomChoose.html";
+        }
+    }
+
     function init() {
         status = "";
         canPaint = false;
@@ -106,13 +121,18 @@ $(function() {
         sendMessage();
     });
 
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+        if(r!=null)return  unescape(r[2]); return null;
+    }
+
     function createWebSocket() {
-        init();
         // 判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
             // 访问路径  端口号+定义的websocket地址
-            userName = $("#userName").val();
-            roomName = $("#roomName").val();
+            // userName = $("#userName").val();
+            // roomName = $("#roomName").val();
             webSocket = new WebSocket("ws://localhost:8082/webSocket/" + roomName + "/" + userName);
         } else {
             alert('Not support webSocket')
@@ -270,7 +290,12 @@ $(function() {
             });
             if (userName === painter) {
                 setTimeout(() => {
+                    $(".scoreBoard").css("display", "none");
                     webSocket.send(message);
+                }, 10 * 1000);
+            } else {
+                setTimeout(() => {
+                    $(".scoreBoard").css("display", "none");
                 }, 10 * 1000);
             }
         }
@@ -305,8 +330,11 @@ $(function() {
         }
         var month = date.getMonth() + 1;
         var dayOfMonth = date.getDate();
-        return date.getFullYear() + "-" + (month <= 9 ? "0" + month : month) + "-" + (dayOfMonth <= 9 ? "0" + dayOfMonth : dayOfMonth) + " "
-            + date.getHours() + ":" + date.getMinutes();
+        var hour = date.getHours();
+        var min = date.getMinutes();
+        return date.getFullYear() + "-" + (month <= 9 ? "0" + month : month) + "-"
+            + (dayOfMonth <= 9 ? "0" + dayOfMonth : dayOfMonth) + " "
+            + (hour <= 9 ? "0" + hour : hour) + ":" + (min <= 9 ? "0" + min : min);
     }
 
     // 画板的显示与隐藏

@@ -5,6 +5,7 @@ spring:
     url: jdbc:oracle:thin:@//172.30.0.184:1521/testdb
     username: VOTE
     password: VOTE
+    driver-class-name: "oracle.jdbc.OracleDriver"
 mybatis:
   mapper-locations:
   - classpath:com/hjb/game/module/manager/xmlmapper/*.xml

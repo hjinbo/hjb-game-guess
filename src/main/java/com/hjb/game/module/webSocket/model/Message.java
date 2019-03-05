@@ -13,6 +13,10 @@ public class Message {
     private List<User> roomUsers;
     private String painter;
     private int gameStatus;
+    private String roomMaster;
+    private String exitUserName;
+    private int gameTime;
+    private String answer;
 
     public int getType() {
         return type;
@@ -86,18 +90,35 @@ public class Message {
         this.gameStatus = gameStatus;
     }
 
-    @Override
-    public String toString() {
-        return "Message{" +
-                "type=" + type +
-                ", content='" + content + '\'' +
-                ", image='" + image + '\'' +
-                ", roomName='" + roomName + '\'' +
-                ", date=" + date +
-                ", user=" + user +
-                ", roomUsers=" + roomUsers +
-                ", painter='" + painter + '\'' +
-                ", gameStatus=" + gameStatus +
-                '}';
+    public String getRoomMaster() {
+        return roomMaster;
+    }
+
+    public void setRoomMaster(String roomMaster) {
+        this.roomMaster = roomMaster;
+    }
+
+    public String getExitUserName() {
+        return exitUserName;
+    }
+
+    public void setExitUserName(String exitUserName) {
+        this.exitUserName = exitUserName;
+    }
+
+    public int getGameTime() {
+        return gameTime;
+    }
+
+    public void setGameTime(int gameTime) {
+        this.gameTime = gameTime;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 }

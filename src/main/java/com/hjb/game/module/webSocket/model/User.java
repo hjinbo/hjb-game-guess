@@ -1,9 +1,13 @@
 package com.hjb.game.module.webSocket.model;
 
+import java.util.Date;
+
 public class User {
     private String userName;
     private int identity;
     private boolean roomMaster;
+    private Date loginDate;
+    private Date rightAnswerTime;
 
     public String getUserName() {
         return userName;
@@ -29,12 +33,20 @@ public class User {
         this.roomMaster = roomMaster;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userName='" + userName + '\'' +
-                ", identity=" + identity +
-                ", roomMaster=" + roomMaster +
-                '}';
+
+    public Date getLoginDate() {
+        return loginDate;
+    }
+
+    public void setLoginDate(Date loginDate) {
+        this.loginDate = loginDate;
+    }
+
+    public Date getRightAnswerTime() {
+        return rightAnswerTime;
+    }
+
+    public void setRightAnswerTime(Date rightAnswerTime) {
+        this.rightAnswerTime = rightAnswerTime;
     }
 }

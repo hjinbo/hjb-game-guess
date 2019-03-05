@@ -4,7 +4,8 @@ $(function() {
 
     var status = "";
     var canPaint = false;
-    var randomContent = "";
+    var randomQuestion = "";
+    var randomAnswer = "";
     var lineWidth = 5;
     var lineColor = "black";
     var webSocket = null;
@@ -13,15 +14,18 @@ $(function() {
     var isConnect = false;
     var image = "";
     var startCanClick = true;
-    var masterStatus = 0;
-    var roomMaster = false;
-    var identity = 0;
     var gameStatus = 0;
+    var statusSpan = true;
+    var gameTime = 60;
+    var timer;
+    var painter = '';
+    var result = false;
 
-    function reload() {
+    function init() {
         status = "";
         canPaint = false;
-        randomContent = "";
+        randomQuestion = "";
+        randomAnswer = "";
         lineWidth = 5;
         lineColor = "black";
         webSocket = null;
@@ -30,10 +34,11 @@ $(function() {
         isConnect = false;
         image = "";
         startCanClick = true;
-        masterStatus = 0;
-        roomMaster = false;
-        identity = 0;
         gameStatus = 0;
+        statusSpan = true;
+        gameTime = 60;
+        painter = '';
+        result = false;
     }
 
     function paint() {
@@ -60,15 +65,19 @@ $(function() {
     }
 
     function randomQuestionOrTips(type) {
+        $(".tip-top").empty();
         var title;
+        randomQuestion = "测试";
+        var font;
         if (type === 1) {
             title = "问题";
-            randomContent = "测试";
+            font = "<font>" + title + ": " + randomQuestion + "</font><font style='display: none;'>" + randomAnswer + "</font>";
         } else {
-            title="提示";
-            randomContent = "程序上线前的流程";
+            title = "提示";
+            randomAnswer = "程序上线前的流程";
+            font = "<font>" + title + ": " + randomAnswer + "</font><font style='display: none;'>" + randomQuestion + "</font>";
         }
-        $("<font>" + title + ": " + randomContent + "</font>").appendTo($(".tip-top"));
+        $(font).appendTo($(".tip-top"));
     }
 
     function hideQuestionOrTips() {
@@ -98,7 +107,7 @@ $(function() {
     });
 
     function createWebSocket() {
-        reload();
+        init();
         // 判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
             // 访问路径  端口号+定义的websocket地址
@@ -129,97 +138,162 @@ $(function() {
         // 接收到消息的回调方法
         webSocket.onmessage = function(event) {
             eval("var jsonObj = (" + event.data + ")");
-            if (jsonObj.type === 3) {
-                $("#img").attr("src", jsonObj.image);
-            }
             if (jsonObj.type === 1) {
+                // 房主信息和开始游戏按钮
+                console.log("房主: " + jsonObj.roomMaster);
+                if (userName === jsonObj.roomMaster) {
+                    $("#startGame").css("display", "");
+                    showPaintBoard(false);
+                    // 加载开始按钮
+                    $("#startGame").click(function() {
+                        var message = JSON.stringify({
+                            type: 4,
+                            user: {
+                                userName: userName
+                            },
+                            roomName: roomName
+                        })
+                        if (startCanClick) {
+                            console.log("开始游戏， 准备选择画家");
+                            webSocket.send(message);
+                            startCanClick = false;
+                        }
+                    });
+                } else {
+                    $("#startGame").css("display", "none");
+                }
+                // 用户左侧和右侧栏的显示
                 var roomUsers = jsonObj.roomUsers;
-                console.log("房间信息: " + roomUsers);
-                console.log(typeof(roomUsers));
                 var num = roomUsers.length;
                 console.log("第" + num + "个进入房间");
                 if (num > 8) {
                     console.log("房间满了");
                 } else {
-                    for (var i = 0; i < num; i++) {
-                        var spanName = roomUsers[i].userName;
-                        var spanIdentity = roomUsers[i].identity;
-                        var tmp = "#user" + (i + 1);
-                        var tmpUserName = "#user" + (i + 1) + " .username";
-                        $(tmpUserName).html(spanName);
-                        $(tmp).css("display", "");
-                    }
+                    addUserSpan(roomUsers);
                 }
             }
+            if (jsonObj.type === 2) {
+                // 游戏正确的处理
+                var answer = jsonObj.content;
+                if (answer === randomQuestion && jsonObj.user.userName !== painter) {
+                    console.log("答对了");
+                    result = true;
+                }
+            }
+            if (jsonObj.type === 3) {
+                $("#img").attr("src", jsonObj.image);
+            }
             if (jsonObj.type === 4) {
-                console.log("画家为:" + jsonObj.painter);
-                console.log("游戏状态:" + jsonObj.gameStatus);
+                gameTime = jsonObj.gameTime;
+                painter = jsonObj.painter;
+                console.log("画家为:" + painter);
                 gameStatus = jsonObj.gameStatus;
                 if (userName === jsonObj.painter) {
                     canPaint = true;
                 } else {
                     canPaint = false;
                 }
-            }
-            if (masterStatus === 0) {
-                roomMaster = jsonObj.user.roomMaster;
-                masterStatus = 1;
-            }
-            console.log("登录者是否是房主?: " + roomMaster);
-            if (roomMaster) {
-                $("#startGame").css("display", "");
-                showPaintBoard(false);
-                // 加载开始按钮
-                $("#startGame").click(function() {
-                    var message = JSON.stringify({
-                        type: 4,
-                        user: {
-                            userName: userName
-                        },
-                        roomName: roomName
-                    })
-                    if (startCanClick) {
-                        console.log("开始游戏， 准备选择画家");
-                        webSocket.send(message);
-                        startCanClick = false;
+                if (painter === "" || painter === undefined) {
+                    console.log("所有玩家均已画完， 游戏结束");
+                    clearInterval(timer);
+                    gameStatus = 2;
+                }
+                console.log("canPaint: " + canPaint);
+                console.log("游戏状态:" + gameStatus);
+                if (gameStatus === 1) {
+                    var names = $(".user .username").html();
+                    for (var i = 0; i < names.length; i++) {
+                        var tmp = "#user" + (i + 1);
+                        if (names[i] === painter) {
+                            $(tmp).css("border-color", "rgb(228, 234, 22)");
+                        } else {
+                            $(tmp).css("border-color", "#e5e5e5");
+                        }
                     }
-                });
-            } else {
-                $("#startGame").css("display", "none");
-            }
-            if (gameStatus === 1) {
-                identity = jsonObj.user.identity;
-                console.log("登录者的身份: " + identity);
-                if (canPaint) {
-                    showPaintBoard(true);
-                    randomQuestionOrTips(1);
-                    paint();
-                } else {
-                    showPaintBoard(false);
-                    if (jsonObj.type === 4) {
+                    if (canPaint) {
+                        showPaintBoard(true);
+                        randomQuestionOrTips(1);
+                        paint();
+                    } else {
+                        showPaintBoard(false);
                         randomQuestionOrTips(2);
                     }
-                } 
-                console.log("canPaint: " + canPaint);
-            } else {
-                hideQuestionOrTips();
+                    timer = setInterval(gameCountDown, 1000);
+                } else {
+                    hideQuestionOrTips();
+                    clearInterval(timer);
+                }
             }
-            setMessage(event.data, "running");
+            if (jsonObj.type === 5) {
+                console.log("用户:" + jsonObj.exitUserName + "离开了房间");
+                // 重新加载用户
+                var roomUsers = jsonObj.roomUsers;
+                $(".user").css("display", "none");
+                $(".user img").css("display", "none");
+                $(".user .username").html("");
+                addUserSpan(roomUsers);
+            }
+            setMessage(event.data);
         }
 
         // 连接关闭的回调方法
         webSocket.onclose = function(CloseEvent) {
-            webSocket.close();
             console.log("" + CloseEvent.code);
-            setMessage(getDate() + " "+ userName + " 退出了聊天室！", "exit");
-            // 增加用户离开的消息发送
+            closeWebSocket();
         }
 
-        
         // 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
         window.onbeforeunload = function() {
-            webSocket.close();
-            // 增加用户离开的消息发送
+            closeWebSocket();
+        }
+    }
+
+    function gameCountDown() {
+        gameTime--;
+        $("#gameTime").html(gameTime);
+        if (gameTime === 0) {
+            clearInterval(timer);
+            canPaint = false;
+            // 公布结果
+            $(".scoreBoard").css("display", "");
+            $(".scoreBoard .answer").html(randomQuestion);
+            var message = JSON.stringify({
+                type: 4,
+                user: {
+                    userName: userName
+                },
+                roomName: roomName
+            })
+            layer.msg("游戏将在10秒后再次开启", {
+                icon: 1,
+                time: 10000
+            });
+            if (userName === painter) {
+                setTimeout(() => {
+                    webSocket.send(message);
+                }, 10 * 1000);
+            }
+        }
+    }
+
+    function addUserSpan(roomUsers) {
+        var num = roomUsers.length;
+        for (var i = 0; i < num; i++) {
+            var spanName = roomUsers[i].userName;
+            var isRoomMaster = roomUsers[i].roomMaster;
+            var tmp = "#user" + (i + 1);
+            var tmpUserName = "#user" + (i + 1) + " .username";
+            $(tmpUserName).html(spanName);
+            if (statusSpan) {
+                var roomMasterSign = "<div class='roomMasterSign'></div>";
+                if (isRoomMaster) {
+                    $(roomMasterSign).prependTo($(tmp));
+                } else {
+                    $(roomMasterSign).remove();
+                }
+                statusSpan = false;
+            }
+            $(tmp).css("display", "");
         }
     }
 
@@ -230,7 +304,8 @@ $(function() {
             var date = new Date(time);
         }
         var month = date.getMonth() + 1;
-        return date.getFullYear() + "-" + (month <= 9 ? "0" + month : month) + "-" + date.getDate() + " "
+        var dayOfMonth = date.getDate();
+        return date.getFullYear() + "-" + (month <= 9 ? "0" + month : month) + "-" + (dayOfMonth <= 9 ? "0" + dayOfMonth : dayOfMonth) + " "
             + date.getHours() + ":" + date.getMinutes();
     }
 
@@ -246,23 +321,24 @@ $(function() {
     }
 
     // 将消息显示在网页上
-    function setMessage(message, type) {
-        if (type === "exit") {
-            var info = "<p class='systemInfo'>" + message + "</p>"
-            $(info).appendTo($("#message"));
-            console.log("exit");
-        } else {
-            eval("var jsonObj = (" + message + ")");
-            var info = assembleInfo(jsonObj);
-            $(info).appendTo($("#message"));
-        }
+    function setMessage(message) {
+        eval("var jsonObj = (" + message + ")");
+        var info = assembleInfo(jsonObj);
+        $(info).appendTo($("#message"));
         var messageDiv = document.getElementById("message");
         messageDiv.scrollTo(0, messageDiv.scrollHeight);
     }
 
     // 关闭连接
     function closeWebSocket() {
-        webSocket.close();
+        var message = JSON.stringify({
+            type: 5,
+            roomName: roomName,
+            user: {
+                userName: userName
+            }
+        });
+        webSocket.send(message);
     }
 
     // 发送消息
@@ -273,16 +349,28 @@ $(function() {
                 userName: userName
             },
             roomName: roomName,
+            painter: painter,
             type: 2,
             content: content
         });
-        if (content !== "") {
-            webSocket.send(message);
-            $("#content").attr("placeholder", "");
-            $("#content").css("border-color", "");
+        if (content === randomQuestion && userName === painter) {
+            layer.msg("作为画家不可以将答案告诉别人啊", {
+                icon: 4,
+                time: 4000
+            });
         } else {
-            $("#content").attr("placeholder", "你需要输入消息");
-            $("#content").css("border-color", "red");
+            if (result && (content === randomQuestion)) {
+                layer.msg("已回答正确，再次作答当心让别人看见");
+            } else {
+                if (content !== "") {
+                    webSocket.send(message);
+                    $("#content").attr("placeholder", "");
+                    $("#content").css("border-color", "");
+                } else {
+                    $("#content").attr("placeholder", "你需要输入消息");
+                    $("#content").css("border-color", "red");
+                }
+            }
         }
         $("#content").val("");
         $("#content").focus();
@@ -296,13 +384,31 @@ $(function() {
         // var isSelf = jsonObj.isSelf;
         var roomName = jsonObj.roomName
         var content = jsonObj.content;
+        var painter = jsonObj.painter;
         var info;
-        if (type === 1) {
-            info = "<p class='systemInfo'>" + userName + "进入了" + "" + roomName + "房间</p>"
-        } else if (type === 2) {
-            info = "<p class='systemInfo dateInfo'>" + getDate(date) + "</p><p class='userInfo'>" + userName + ": " + content + "</p>"
-        } else if (type === 4) {
-            info = "<p class='systemInfo'>游戏开始</p>"
+        switch (type) {
+            case 1:
+                info = "<p class='systemInfo'>" + userName + "进入了" + "" + roomName + "房间</p>";
+                break;
+            case 2:
+                if (content === randomQuestion) {
+                    info = "<p class='systemInfo dateInfo'>" + getDate(date) + "</p>" +
+                    "<p class='userInfo'>" + userName + ":    </p>";
+                } else {
+                    info = "<p class='systemInfo dateInfo'>" + getDate(date) + "</p>" +
+                    "<p class='userInfo'>" + userName + ": " + content + "</p>";
+                }
+                break;
+            case 4:
+                if (painter === "" | painter === undefined) {
+                    info = "<p class='systemInfo'>游戏结束</p>";
+                } else {
+                    info = "<p class='systemInfo'>游戏开始</p>";
+                }
+                break;
+            case 5:
+                info = "<p class='systemInfo'>" + userName + "离开了" + "" + roomName + "房间</p>";
+                break;
         }
         return info;
     }

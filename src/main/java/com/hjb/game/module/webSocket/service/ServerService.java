@@ -8,15 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.websocket.Session;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerService {
 
     private static Logger logger = LoggerFactory.getLogger(ServerService.class);
+
+    private static SimpleDateFormat sdf = new SimpleDateFormat("hhmmss");
 
     static ConcurrentHashMap<String, ConcurrentHashMap<Session, User>> rooms = MainServer.rooms;
 
@@ -63,55 +63,86 @@ public class ServerService {
         return rooms.get(roomName);
     }
 
-    private List<User> getRoomUsers(String roomName) {
+    private List<User> getRoomUsers(String roomName) throws Exception {
         ConcurrentHashMap<Session, User> roomMap = getRoomPlayers(roomName);
+        if (roomMap == null) {
+            throw new Exception("房间: " + roomName + "没有玩家");
+        }
         List<User> users = new ArrayList<User>();
         User user;
         for (Session session : roomMap.keySet()) {
             user = roomMap.get(session);
             users.add(user);
         }
+        users.sort(new Comparator<User>() {
+            public int compare(User o1, User o2) {
+                return Integer.parseInt(sdf.format(o1.getLoginDate())) - Integer.parseInt(sdf.format(o2.getLoginDate()));
+            }
+        });
+        logger.info("当前房间的用户: {}", users);
         return users;
     }
 
-    public Session getRoomMaster(String roomName) {
+    public String getRoomMaster(String roomName) {
         ConcurrentHashMap<Session, User> roomMap = getRoomPlayers(roomName);
         User user;
         for (Session session : roomMap.keySet()) {
             user = roomMap.get(session);
             if (user.isRoomMaster()) {
+                return user.getUserName();
+            }
+        }
+        return "";
+    }
+
+    private Session getSessionByUserNameAndRoomName(String userName, String roomName) {
+        ConcurrentHashMap<Session, User> roomMap = getRoomPlayers(roomName);
+        for (Session session : roomMap.keySet()) {
+            if (userName.equals(roomMap.get(session).getUserName())) {
                 return session;
             }
         }
         return null;
     }
 
+    /**
+     * 画家的选举方式改为按登录先后来选举
+     * @param roomName
+     * @return
+     */
     public String choosePainter(String roomName) {
-        Session painter = null;
         ConcurrentHashMap<Session, User> roomMap = getRoomPlayers(roomName);
+        List<User> users = new ArrayList<>();
+        User user;
         for (Session session : roomMap.keySet()) {
-            User user = roomMap.get(session);
-            if (user.getIdentity() == 0) { // 0 表示待成为画家
-                user.setIdentity(1); // 1 表示已为画家
-                roomMap.put(session, user);
-                painter = session;
-                rooms.put(roomName, roomMap);
-                break;
-            } else {
-                painter = session;
+            user = roomMap.get(session);
+            if (user.getIdentity() != 1) {
+                users.add(user);
             }
         }
-        String userName = "";
-        if (painter != null) {
-            userName = roomMap.get(painter).getUserName();
-            logger.info("userName: {}", userName);
+        users.sort(new Comparator<User>() {
+            @Override
+            public int compare(User o1, User o2) {
+                return Integer.parseInt(sdf.format(o1.getLoginDate())) - Integer.parseInt(sdf.format(o2.getLoginDate()));
+            }
+        });
+        String painterName = "";
+        // 选出第一个登录者为画家
+        if (users.size() > 0) {
+            User u = users.get(0);
+            painterName = u.getUserName();
+            // 根据roomName和painterName找出对应的session
+            Session painterSession = getSessionByUserNameAndRoomName(painterName, roomName);
+            u.setIdentity(1); // 1 表示已为画家
+            roomMap.put(painterSession, u);
+            rooms.put(roomName, roomMap);
         }
-        return userName;
+        logger.info("选出的画家为: {}", painterName);
+        return painterName;
     }
 
-    private Message setSendMessage(Session session, String message) {
+    private Message setSendMessage(Session session, String message) throws Exception {
         Message receiveMessage = JSONObject.parseObject(message, Message.class);
-//        logger.info("本次接收到的消息: {}", receiveMessage);
         String roomName = receiveMessage.getRoomName();
         Message sendMessage = new Message();
         sendMessage.setDate(new Date());
@@ -122,18 +153,18 @@ public class ServerService {
             // 1 表示系统消息
             case 1:
                 sendMessage.setType(1);
-                Session roomMaster = getRoomMaster(roomName);
-                if (roomMaster.equals(session)) {
-                    user.setRoomMaster(true);
-                } else {
-                    user.setRoomMaster(false);
-                }
+                String roomMaster = getRoomMaster(roomName);
+                sendMessage.setRoomMaster(roomMaster);
                 sendMessage.setRoomUsers(getRoomUsers(roomName));
                 break;
             // 2 表示聊天消息
             case 2:
                 sendMessage.setType(2);
                 sendMessage.setContent(receiveMessage.getContent());
+                if (!receiveMessage.getPainter().equals(user.getUserName()) && receiveMessage.getContent().equals(receiveMessage.getAnswer())) {
+                    logger.info("非画家作答正确");
+                    user.setRightAnswerTime(new Date());
+                }
                 break;
             // 3 表示图片消息
             case 3:
@@ -145,12 +176,15 @@ public class ServerService {
                 sendMessage.setType(4);
                 String painter = choosePainter(roomName);
                 sendMessage.setPainter(painter);
-                sendMessage.setGameStatus(1);
-                user.setIdentity(0);
-                if (session.equals(painter)) {
-                    user.setIdentity(1);
-                    logger.info("选出的画家为: {}", user.getUserName());
-                }
+                sendMessage.setGameStatus(1); // 1表示房主点击游戏开始
+                sendMessage.setGameTime(60);
+                break;
+            // 5 表示用户离开消息
+            case 5:
+                sendMessage.setType(5);
+                sendMessage.setExitUserName(user.getUserName());
+                removePlayerBySession(session);
+                sendMessage.setRoomUsers(getRoomUsers(roomName));
                 break;
         }
         sendMessage.setUser(user);
@@ -158,11 +192,13 @@ public class ServerService {
         return sendMessage;
     }
 
-    public synchronized void sendMessageInRoom(Session session, String message) throws IOException {
+    public synchronized void sendMessageInRoom(Session session, String message) throws Exception {
         Message receiveMessage = JSONObject.parseObject(message, Message.class);
         String roomName = receiveMessage.getRoomName();
         ConcurrentHashMap<Session, User> roomMap = getRoomPlayers(roomName);
-//        logger.info("房间: {}中的玩家", roomMap);
+        if (roomMap == null) {
+            throw new Exception("房间不存在");
+        }
         Message sendMessage = setSendMessage(session, message);
         String sendText = JSONObject.toJSONString(sendMessage);
         logger.info("发送的消息: {}", sendText);
@@ -174,6 +210,8 @@ public class ServerService {
             } else if (sendMessage.getType() == 3 && !se.equals(session)) {
                 se.getBasicRemote().sendText(sendText);
             } else if (sendMessage.getType() == 4) {
+                se.getBasicRemote().sendText(sendText);
+            } else if (sendMessage.getType() == 5) {
                 se.getBasicRemote().sendText(sendText);
             }
         }

@@ -1,7 +1,7 @@
 * {
     margin: 0;
 }
-#userName, #roomName, #connect, #exit, #startGame {
+#userName, #roomName, #connect, #exit, #startGame, #gameTime {
     float: right;
     margin-top: 10px;
     margin-right: 10px;

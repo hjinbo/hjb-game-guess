@@ -1,6 +1,16 @@
 spring:
   application:
-    name: dz-kfb-demo
+    name: hjb-game-guess
+  datasource:
+    url: jdbc:oracle:thin:@//172.30.0.184:1521/testdb
+    username: VOTE
+    password: VOTE
+mybatis:
+  mapper-locations:
+  - classpath:com/hjb/game/module/manager/xmlmapper/*.xml
+  type-aliases-package: com.hjb.game.module.**.model
+  configuration:
+    jdbc-type-for-null: 'NULL'
 #eureka:
 #  client:
 #    registerWithEureka: false

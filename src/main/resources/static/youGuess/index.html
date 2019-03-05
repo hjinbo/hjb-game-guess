@@ -2,15 +2,19 @@
     <head>
         <meta charset="UTF-8">
         <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="layui/layui.all.js"></script>
         <script src="js/painting.js"></script>
         <script src="js/other.js"></script>
+        <link rel="stylesheet" href="layui/css/layui.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/top.css">
         <link rel="stylesheet" href="css/middle.css">
         <link rel="stylesheet" href="css/bottom.css">
+        <link rel="stylesheet" href="css/scoreBoard.css">
     </head>
     <body>
         <div class="back">
+            <span id="gameTime"></span>
             <button id="startGame" style="display: none;">startGame</button>
             <input id="userName" placeholder="用户名" type="text"/>
             <input id="roomName" placeholder="房间名" type="text"/>
@@ -73,6 +77,10 @@
                     <span class="lineWidth" title="10">🔟</span>
                 </div>
                 <div class="colorChoose"><input type="color" id="colorSelector"/></div>
+            </div>
+            <div class="scoreBoard" style="display: none;">
+                <div class="answer"></div>
+                <div class="scores"></div>
             </div>
         </div>
     </body>

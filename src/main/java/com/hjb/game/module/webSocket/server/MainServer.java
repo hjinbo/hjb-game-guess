@@ -10,6 +10,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -35,6 +36,7 @@ public class MainServer {
         ConcurrentHashMap<Session, User> roomMap = service.getRoomPlayers(roomName);
         User user = new User();
         user.setUserName(userName);
+        user.setLoginDate(new Date());
         user.setIdentity(0); // 0 表示等待画画的身份
         if (roomMap == null || roomMap.size() == 0) {
             user.setRoomMaster(true); // 第一个进入房间的人为房主
@@ -69,8 +71,13 @@ public class MainServer {
 
     // 收到消息时执行
     @OnMessage
-    public void onMessage(Session session, String message) throws IOException {
+    public void onMessage(Session session, String message) {
         ServerService service = new ServerService();
-        service.sendMessageInRoom(session, message);
+        try {
+            service.sendMessageInRoom(session, message);
+        } catch (Exception e) {
+            logger.error("发送消息异常: {}", e.getMessage());
+//            e.printStackTrace();
+        }
     }
 }

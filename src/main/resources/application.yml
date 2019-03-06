@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: hjb-game-guess
+  datasource:
+    driver-class-name: "com.mysql.jdbc.Driver"
+    url: jdbc:mysql://localhost:3306/guess
+    username: root
+    password: root
+mybatis:
+  mapper-locations:
+  - classpath:com/hjb/game/module/manager/xmlmapper/*.xml
+  type-aliases-package: com.hjb.game.module.**.model
+  configuration:
+    jdbc-type-for-null: 'NULL'
+#eureka:
+#  client:
+#    registerWithEureka: false
+#    fetchRegistry: false
+#    service-url:
+#      defaultZone: http://127.0.0.1:8810/eureka/
+#  instance:
+#    instance-id: ${eureka.instance.ip-address}:${spring.application.name}:${server.port}
+#    ip-address: 127.0.0.1
+#    prefer-ip-address: true
+server:
+  port: 8082

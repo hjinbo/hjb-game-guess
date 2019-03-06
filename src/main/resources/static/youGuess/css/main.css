@@ -1,0 +1,12 @@
+* {
+    margin: 0;
+}
+#userName, #roomName, #connect, #exit, #startGame, #gameTime {
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+#userName, #roomName {
+    width: 100px;
+}
+

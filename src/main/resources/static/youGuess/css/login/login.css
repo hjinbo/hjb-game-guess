@@ -1,0 +1,145 @@
+.loginBack {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.operateDiv {
+    margin: 100px auto;
+    width: 420px;
+    height: 300px;
+    border: 1px solid #e5e5e5;
+    padding: 20px;
+    box-shadow: inset 0 0 20px 0px #aaa;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.reg-mark-left, .reg-btn {
+    float: right;
+}
+.reg-mark-left {
+    display: inline-block;
+    border-top: 2px solid;
+    border-right: 2px solid;
+    width: 10px;
+    height: 10px;
+    border-color: rgb(251, 255, 29);
+    transform: rotate(-135deg);
+}
+.reg-btn {
+    width: 65px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #4acad9;
+    color: #fff;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-size: x-small;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.reg-btn:hover {
+    background-color: #f7df0f;
+    -webkit-transition: all 0.4s linear;
+    transition: all 0.4s linear;
+}
+.userName-div, .password-div, .password-again-div {
+    width: 216px;
+    margin: 30px auto;
+    text-align: left;
+    position: relative;
+}
+.userName, .password, .password-again {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    outline: none;
+    border: 2px solid #222;
+    border-radius: 5px;
+}
+.userName-label, .password-label, .password-again-label {
+    display: block;
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    color: #cecece;
+    cursor: text;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.submit {
+    width: 220px;
+    height: 45px;
+    background-color: #4acad9;
+    text-align: center;
+    line-height: 45px;
+    color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 auto;
+}
+.splitLine {
+    margin-top: 50px;
+}
+.copyright {
+    margin-top: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    text-align: center;
+    font-size: x-small;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.author:hover {
+    color: yellow;
+}
+.submit:hover {
+    background-color: #06e978;
+}
+
+/* 暂不使用 */
+.glareLogin {
+    width: 45px;
+    height: 80px;
+    position: absolute;
+    top: 50%;
+    right: 76%;
+    -webkit-transform: rotate(25deg);
+    transform: rotate(25deg);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+.glareRegister {
+    width: 45px;
+    height: 80px;
+    position: absolute;
+    top: 70%;
+    right: 80%;
+    -webkit-transform: rotate(25deg);
+    transform: rotate(25deg);
+    background-color: rgba(255, 255, 255, 0.5);
+}
+#login:hover .glareLogin {
+    right: 10%;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}
+#register:hover .glareRegister {
+    right: 10%;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}

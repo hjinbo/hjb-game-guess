@@ -3,14 +3,22 @@
         <meta charset="utf-8">
         <script src="js/jquery-3.3.1.min.js"></script>
         <script src="layui/layui.all.js"></script>
-        <script src="js/roomChoose.js"></script>
-        <link rel="stylesheet" href="layui/css/layui.css"/>
-        <link rel="stylesheet" href="css/roomChoose.css"/>
+        <script src="js/common/index.js"></script>
+        <script src="js/roomChoose/roomChoose.js"></script>
+        <link rel="stylesheet" href="layui/css/layui.css" />
+        <link rel="stylesheet" href="css/animate.css" />
+        <link rel="stylesheet" href="css/common/index.css" />
+        <link rel="stylesheet" href="css/roomChoose/roomChoose.css"/>
     </head>
     <body>
-        <div class="roomChoose">
-            <input type="text" id="roomName"/><br/>
-            <button id="access">access</button>
+        <div class="picBack"></div>
+        <div class="roomChooseBack">
+            <div class="operateDiv">
+                <div class="roomName-div">
+                    <input type="text" id="roomName"/>
+                </div>
+                <div id="access">access</div>
+            </div>
         </div>
     </body>
 </html>

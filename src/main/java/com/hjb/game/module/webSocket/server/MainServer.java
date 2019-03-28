@@ -1,15 +1,20 @@
 package com.hjb.game.module.webSocket.server;
 
-import com.hjb.game.module.webSocket.model.User;
+import com.hjb.game.module.manager.model.User;
+import com.hjb.game.module.manager.service.LoginService;
+import com.hjb.game.module.webSocket.MyApplicationContextAware;
+import com.hjb.game.module.webSocket.model.Player;
 import com.hjb.game.module.webSocket.service.ServerService;
+import org.apache.catalina.core.ApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.ContextLoader;
 
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
-import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MainServer {
 
     private static Logger logger = LoggerFactory.getLogger(MainServer.class);
-    public static ConcurrentHashMap<String, ConcurrentHashMap<Session, User>> rooms = new ConcurrentHashMap<String, ConcurrentHashMap<Session, User>>();
+    public static ConcurrentHashMap<String, ConcurrentHashMap<Session, Player>> rooms = new ConcurrentHashMap<String, ConcurrentHashMap<Session, Player>>();
     /*
         status 游戏的状态位;
         0: 初始化，等待玩家进入房间;
@@ -27,25 +32,41 @@ public class MainServer {
         3: 游戏结束;
      */
     private static int status = 0;
-
+    private LoginService loginService = (LoginService) MyApplicationContextAware.getApplicationContext().getBean(LoginService.class);
     // 连接时执行
     @OnOpen
-    public void onOpen(Session session, @PathParam("roomName") String roomName, @PathParam("userName") String userName) {
+    public void onOpen(Session session, @PathParam("roomName") String roomName,
+                       @PathParam("userName") String userName) {
         logger.info("房间名: {}, 登录者: {}", roomName, userName);
         ServerService service = new ServerService();
-        ConcurrentHashMap<Session, User> roomMap = service.getRoomPlayers(roomName);
-        User user = new User();
-        user.setUserName(userName);
-        user.setLoginDate(new Date());
-        user.setIdentity(0); // 0 表示等待画画的身份
+        ConcurrentHashMap<Session, Player> roomMap = service.getRoomPlayers(roomName);
+        Player player = new Player();
+        player.setUserName(userName);
+        User user = loginService.getUserByUserName(userName);
+        String nickName;
+        String img = "";
+        if (user == null) {
+            logger.error("用户名:【" + userName + "】找不到");
+            nickName = userName;
+        } else {
+            nickName = user.getNickname();
+            if (nickName == null || "".equals(nickName)) {
+                nickName = userName;
+            }
+            img = user.getImg();
+        }
+        player.setNickName(nickName);
+        player.setImg(img);
+        player.setLoginDate(new Date());
+        player.setIdentity(0); // 0 表示等待画画的身份
         if (roomMap == null || roomMap.size() == 0) {
-            user.setRoomMaster(true); // 第一个进入房间的人为房主
-            ConcurrentHashMap<Session, User> emptyRoom = new ConcurrentHashMap<Session, User>();
-            emptyRoom.put(session, user);
+            player.setRoomMaster(true); // 第一个进入房间的人为房主
+            ConcurrentHashMap<Session, Player> emptyRoom = new ConcurrentHashMap<Session, Player>();
+            emptyRoom.put(session, player);
             rooms.put(roomName, emptyRoom);
         } else {
-            user.setRoomMaster(false); // 后加入的人为成员
-            roomMap.put(session, user);
+            player.setRoomMaster(false); // 后加入的人为成员
+            roomMap.put(session, player);
             rooms.put(roomName, roomMap);
         }
 //        logger.info("所有房间信息: {}", rooms);
@@ -77,7 +98,7 @@ public class MainServer {
             service.sendMessageInRoom(session, message);
         } catch (Exception e) {
             logger.error("发送消息异常: {}", e.getMessage());
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }

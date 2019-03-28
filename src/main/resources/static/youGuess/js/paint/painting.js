@@ -1,4 +1,7 @@
 $(function() {
+
+    var webSocketAddressPrefix = "ws://localhost:8083/webSocket/";
+
     var monitor = document.getElementById("paint-board");
     var context = monitor.getContext("2d");
 
@@ -11,6 +14,7 @@ $(function() {
     var webSocket = null;
     var roomName = "";
     var userName = "";
+    var nickName = "";
     var isConnect = false;
     var image = "";
     var startCanClick = true;
@@ -20,6 +24,8 @@ $(function() {
     var timer;
     var painter = '';
     var result = false;
+    var roomUsersWithScore = [];
+    var oldRoomUsersWithScore = [];
 
     initPage();
     createWebSocket();
@@ -34,6 +40,7 @@ $(function() {
         if (roomName === null || roomName === undefined) {
             window.location.href = "roomChoose.html";
         }
+        nickName = sessionStorage.getItem("nickName");
     }
 
     function init() {
@@ -46,6 +53,7 @@ $(function() {
         webSocket = null;
         roomName = "";
         userName = "";
+        nickName = "";
         isConnect = false;
         image = "";
         startCanClick = true;
@@ -54,13 +62,15 @@ $(function() {
         gameTime = 60;
         painter = '';
         result = false;
+        roomUsersWithScore = [];
+        oldRoomUsersWithScore = [];
     }
 
     function paint() {
         $("#paint-board").mousedown(function(e) {
             status = "painting";
             context.beginPath();
-            context.moveTo(e.pageX - 362, e.pageY - 52);
+            context.moveTo(e.pageX - 262, e.pageY - 52);
         });
         $("#paint-board").mouseup(function() {
             status = "";
@@ -69,7 +79,7 @@ $(function() {
             if (status === "painting") {
                 context.strokeStyle = lineColor;
                 context.lineWidth = lineWidth;
-                context.lineTo(e.pageX - 362, e.pageY - 52);
+                context.lineTo(e.pageX - 262, e.pageY - 52);
                 context.stroke();
                 saveImg();
                 setTimeout(() => {
@@ -115,17 +125,12 @@ $(function() {
     });
     $("#exit").click(function() {
         closeWebSocket();
+        window.location.href = "roomChoose.html"
     });
 
     $("#send").click(function() {
         sendMessage();
     });
-
-    function getQueryString(name) {
-        var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-        var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
-        if(r!=null)return  unescape(r[2]); return null;
-    }
 
     function createWebSocket() {
         // 判断当前浏览器是否支持WebSocket
@@ -133,14 +138,15 @@ $(function() {
             // 访问路径  端口号+定义的websocket地址
             // userName = $("#userName").val();
             // roomName = $("#roomName").val();
-            webSocket = new WebSocket("ws://localhost:8082/webSocket/" + roomName + "/" + userName);
+            webSocket = new WebSocket(webSocketAddressPrefix + roomName + "/" + userName);
         } else {
-            alert('Not support webSocket')
+            alert('Not support webSocket');
         }
 
         // 连接发生错误的回调方法
-        webSocket.onerror = function() {
-            console.log("error");
+        webSocket.onerror = function(event) {
+            console.log("readyState: " +　event.target.readyState);
+            // layer.alert("readyState: " +　event.target.readyState, {title: event.type});
         };
 
         // 连接成功建立的回调方法
@@ -148,7 +154,8 @@ $(function() {
             var message = JSON.stringify({
                 type: 1,
                 user: {
-                    userName: userName
+                    userName: userName,
+                    nickName: nickName
                 },
                 roomName: roomName
             })
@@ -169,11 +176,13 @@ $(function() {
                         var message = JSON.stringify({
                             type: 4,
                             user: {
-                                userName: userName
+                                userName: userName,
+                                nickName: nickName
                             },
-                            roomName: roomName
+                            roomName: roomName,
+                            startTime: new Date()
                         })
-                        if (startCanClick) {
+                        if (startCanClick && gameStatus === 2) {
                             console.log("开始游戏， 准备选择画家");
                             webSocket.send(message);
                             startCanClick = false;
@@ -217,6 +226,16 @@ $(function() {
                     console.log("所有玩家均已画完， 游戏结束");
                     clearInterval(timer);
                     gameStatus = 2;
+                    // 发送游戏结束消息
+                    var message = JSON.stringify({
+                        type: 7,
+                        user: {
+                            userName: userName,
+                            nickName: nickName
+                        },
+                        roomName: roomName
+                    });
+                    webSocket.send(message);
                 }
                 console.log("canPaint: " + canPaint);
                 console.log("游戏状态:" + gameStatus);
@@ -253,6 +272,12 @@ $(function() {
                 $(".user .username").html("");
                 addUserSpan(roomUsers);
             }
+            if (jsonObj.type === 6) {
+                roomUsersWithScore = jsonObj.roomUsers;
+            }
+            if (jsonObj.type === 7) {
+                startCanClick = true;
+            }
             setMessage(event.data);
         }
 
@@ -275,14 +300,35 @@ $(function() {
             clearInterval(timer);
             canPaint = false;
             // 公布结果
-            $(".scoreBoard").css("display", "");
-            $(".scoreBoard .answer").html(randomQuestion);
             var message = JSON.stringify({
-                type: 4,
+                type: 6,
                 user: {
-                    userName: userName
+                    userName: userName,
+                    nickName: nickName
                 },
                 roomName: roomName
+            })
+            webSocket.send(message);
+            if (roomUsersWithScore.length > 0 || oldRoomUsersWithScore !== roomUsersWithScore) {
+                $(".scoreBoard").css("display", "");
+                var questionResult = "本轮结果: " + randomQuestion;
+                $(".scoreBoard .answer").html(questionResult);
+                for (var i = 0; i < roomUsersWithScore.length; i++) {
+                    var tmp = ".scores .row" + i;
+                    $(tmp).css("display", "");
+                    $(tmp + " .name").html(roomUsersWithScore[i].userName);
+                    $(tmp + " .score").html(roomUsersWithScore[i].score);
+                }
+                oldRoomUsersWithScore = roomUsersWithScore;
+            }
+            message = JSON.stringify({
+                type: 4,
+                user: {
+                    userName: userName,
+                    nickName: nickName
+                },
+                roomName: roomName,
+                startTime: new Date()
             })
             layer.msg("游戏将在10秒后再次开启", {
                 icon: 1,
@@ -304,7 +350,8 @@ $(function() {
     function addUserSpan(roomUsers) {
         var num = roomUsers.length;
         for (var i = 0; i < num; i++) {
-            var spanName = roomUsers[i].userName;
+            var spanName = roomUsers[i].nickName;
+            var img = roomUsers[i].img;
             var isRoomMaster = roomUsers[i].roomMaster;
             var tmp = "#user" + (i + 1);
             var tmpUserName = "#user" + (i + 1) + " .username";
@@ -363,7 +410,8 @@ $(function() {
             type: 5,
             roomName: roomName,
             user: {
-                userName: userName
+                userName: userName,
+                nickName: nickName
             }
         });
         webSocket.send(message);
@@ -374,7 +422,8 @@ $(function() {
         var content = $("#content").val().trim();
         var message = JSON.stringify({
             user: {
-                userName: userName
+                userName: userName,
+                nickName: nickName
             },
             roomName: roomName,
             painter: painter,
@@ -388,10 +437,18 @@ $(function() {
             });
         } else {
             if (result && (content === randomQuestion)) {
-                layer.msg("已回答正确，再次作答当心让别人看见");
+                layer.msg("已回答正确，正确答案不可再次再次提交");
             } else {
                 if (content !== "") {
-                    webSocket.send(message);
+                    try {
+                        if (webSocket.readyState === 1) {
+                            webSocket.send(message);
+                        } else {
+                            layer.alert("连接建立异常, 发送失败");
+                        }
+                    } catch (e) {
+                        layer.alert(e);
+                    }
                     $("#content").attr("placeholder", "");
                     $("#content").css("border-color", "");
                 } else {
@@ -407,6 +464,7 @@ $(function() {
     // 装配消息
     function assembleInfo(jsonObj) {
         var userName = jsonObj.user.userName;
+        var nickName = jsonObj.user.nickName;
         var date = jsonObj.date;
         var type = jsonObj.type;
         // var isSelf = jsonObj.isSelf;
@@ -416,15 +474,15 @@ $(function() {
         var info;
         switch (type) {
             case 1:
-                info = "<p class='systemInfo'>" + userName + "进入了" + "" + roomName + "房间</p>";
+                info = "<p class='systemInfo'>" + nickName + "进入了" + "" + roomName + "房间</p>";
                 break;
             case 2:
                 if (content === randomQuestion) {
                     info = "<p class='systemInfo dateInfo'>" + getDate(date) + "</p>" +
-                    "<p class='userInfo'>" + userName + ":    </p>";
+                    "<p class='userInfo'>" + nickName + ":    </p>";
                 } else {
                     info = "<p class='systemInfo dateInfo'>" + getDate(date) + "</p>" +
-                    "<p class='userInfo'>" + userName + ": " + content + "</p>";
+                    "<p class='userInfo'>" + nickName + ": " + content + "</p>";
                 }
                 break;
             case 4:
@@ -435,7 +493,7 @@ $(function() {
                 }
                 break;
             case 5:
-                info = "<p class='systemInfo'>" + userName + "离开了" + "" + roomName + "房间</p>";
+                info = "<p class='systemInfo'>" + nickName + "离开了" + "" + roomName + "房间</p>";
                 break;
         }
         return info;
@@ -448,7 +506,8 @@ $(function() {
     function sendImg() {
         var message = JSON.stringify({
             user: {
-                userName: userName
+                userName: userName,
+                nickName: nickName
             },
             roomName: roomName,
             type: 3,

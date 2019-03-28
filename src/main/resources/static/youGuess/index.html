@@ -1,86 +1,117 @@
 <html>
     <head>
-        <meta charset="UTF-8">
+        <meta charset="UTF-8"/>
+        <title>首页</title>
         <script src="js/jquery-3.3.1.min.js"></script>
         <script src="layui/layui.all.js"></script>
-        <script src="js/paint/painting.js"></script>
-        <script src="js/paint/other.js"></script>
-        <link rel="stylesheet" href="layui/css/layui.css">
-        <link rel="stylesheet" href="css/paint/main.css">
-        <link rel="stylesheet" href="css/paint/top.css">
-        <link rel="stylesheet" href="css/paint/middle.css">
-        <link rel="stylesheet" href="css/paint/bottom.css">
-        <link rel="stylesheet" href="css/paint/scoreBoard.css">
+        <script src="js/common/common.js"></script>
+        <script src="js/index/index.js"></script>
+        <script src="js/common/paper-full.min.js"></script>
+        <script src="js/common/fly.js"></script>
+        <script src="js/common/header.js"></script>
+        <link rel="stylesheet" href="layui/css/layui.css" />
+        <link rel="stylesheet" href="css/common/common.css" />
+        <link rel="stylesheet" href="css/common/header.css" />
+        <link rel="stylesheet" href="css/index/index.css" />
+        <link rel="stylesheet" href="css/animate.css" />
+        <!-- <link rel="import" href="header.html" id="header"/> -->
     </head>
     <body>
-        <div class="back">
-            <span id="gameTime"></span>
-            <button id="startGame" style="display: none;">startGame</button>
-            <!-- <input id="userName" placeholder="用户名" type="text"/>
-            <input id="roomName" placeholder="房间名" type="text"/>
-            <button id="connect">connect</button> -->
-            <button id="exit">exit</button>
-            <div class="tip-top"></div>
-            <div class="body-middle">
-                <div class="user-left">
-                    <span class="user" id="user1" style="display: none;">
-                        <img src="#"/><span class="username">user1</span>
-                    </span>
-                    <span class="user" id="user2" style="display: none;">
-                        <img src="#"/><span class="username">user2</span>
-                    </span>
-                    <span class="user" id="user3" style="display: none;">
-                        <img src="#"/><span class="username">user3</span>
-                    </span>
-                    <span class="user" id="user4" style="display: none;">
-                        <img src="#"/><span class="username">user4</span>
-                    </span>
-                </div>
-                <div class="paint-board-div">
-                    <img id="img" width="450px" height="450px" style="display: none;"/>
-                    <canvas id="paint-board" width="450" height="450">browser not support</canvas>
-                </div>
-                <div class="user-right">
-                    <span class="user" id="user5" style="display: none;">
-                        <img src="#"/><span class="username">user5</span>
-                    </span>
-                    <span class="user" id="user6" style="display: none;">
-                        <img src="#"/><span class="username">user6</span>
-                    </span>
-                    <span class="user" id="user7" style="display: none;">
-                        <img src="#"/><span class="username">user7</span>
-                    </span>
-                    <span class="user" id="user8" style="display: none;">
-                        <img src="#"/><span class="username">user8</span>
-                    </span>
-                </div>
-                <div class="chat-right">
-                    <div id="message"></div>
-                    <div class="chooseEmotionDiv" style="display: none;">
-                        <span class="emoti">🤣</span>
-                        <span class="emoti">😭</span>
-                        <span class="emoti">😓</span>
-                        <span class="emoti">😏</span>
-                    </div>
-                    <div class="btn">
-                        <textarea id="content"></textarea>
-                        <span id="emotion">😄</span>
-                        <button id="send">发送</button>
+        <div class="picBack">
+            <canvas id="space" resize="true"></canvas>
+        </div>
+        <div class="indexBack">
+            <!-- <iframe class="header-iframe" src="header.html" frameborder="no" width="100%" height="150px"></iframe> -->
+            <div class="breadCrumb">
+                <ul class="header-ul">
+                    <li class="header-li">
+                        <div class="text personInfo">个人中心</div>
+                        <div class="text-bottom"></div>
+                        <div class="personInfoDiv" style="display: none;">
+                            <span class="changeImg">更换头像</span>
+                            <span class="changePassword">修改密码</span>
+                            <span class="layout">注销登录</span>
+                        </div>
+                    </li>
+                    <li class="header-li">
+                        <div class="text">asdsa</div>
+                        <div class="text-bottom"></div>
+                    </li>
+                    <li class="header-li">
+                        <div class="text">asd</div>
+                        <div class="text-bottom"></div>
+                    </li>
+                </ul>
+                <div>
+                    <div class="imgChooseDiv" style="display: none;">
+                        <div class="preview"></div>
+                        <div class="defaultImgsDiv">
+                            <div class="defaultImgDiv img-0"></div>
+                            <div class="defaultImgDiv img-1"></div>
+                            <div class="defaultImgDiv img-2"></div>
+                            <div class="defaultImgDiv img-3"></div>
+                            <div class="defaultImgDiv img-4"></div>
+                            <div class="defaultImgDiv img-5"></div>
+                            <div class="defaultImgDiv img-6"></div>
+                            <div class="defaultImgDiv img-7"></div>
+                            <div class="defaultImgDiv img-8"></div>
+                            <div class="defaultImgDiv img-9"></div>
+                            <div class="defaultImgDiv img-10"></div>
+                            <div class="defaultImgDiv img-11"></div>
+                            <div class="defaultImgDiv img-12"></div>
+                            <div class="defaultImgDiv img-13"></div>
+                            <div class="defaultImgDiv img-14"></div>
+                            <div class="defaultImgDiv img-15"></div>
+                            <div class="defaultImgDiv img-16"></div>
+                            <div class="defaultImgDiv img-17"></div>
+                            <div class="defaultImgDiv img-18"></div>
+                            <div class="defaultImgDiv img-19"></div>
+                            <div class="defaultImgDiv img-20"></div>
+                            <div class="defaultImgDiv img-21"></div>
+                            <div class="defaultImgDiv img-22"></div>
+                            <div class="defaultImgDiv img-23"></div>
+                        </div>
+                        <div class="bottom-btn">
+                            <div class="save">
+                                save
+                            </div>
+                            <div class="cancel">
+                                cancel
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="operator-bottom">
-                <div class="lineWidthDiv">
-                    <span class="lineWidth" title="1">1️⃣</span>
-                    <span class="lineWidth" title="3">3️⃣</span>
-                    <span class="lineWidth" title="5">5️⃣</span>
-                    <span class="lineWidth" title="10">🔟</span>
-                </div>
-                <div class="colorChoose"><input type="color" id="colorSelector"/></div>
+            <div class="tipDiv">
+                <span class="tip" title="secret">
+                    &nbsp;&nbsp;&nbsp;&nbsp;感谢你的加入，你已成功进入本系统的大门，以下仍有几个入口有待你的探索，
+                    进入之前请留意每个房间的要求，快快进入体验吧(请用鼠标点击<span class="access-text">文字</span>以打开入口)
+                </span>
             </div>
-            <div class="scoreBoard" style="display: none;">
-                <div class="answer"></div>
-                <div class="scores"></div>
+            <div class="entranceDivBack">
+                <div class="entranceDiv">
+                    <div class="doorDiv">
+                        <div id="door1" class="door" style="display: none;">
+                            第一道门
+                        </div>
+                    </div>
+                    <div class="doorDiv">
+                        <div id="door2" class="door" style="display: none;">
+                            第二道门
+                        </div>
+                    </div>
+                    <div class="doorDiv">
+                        <div id="door3" class="door" style="display: none;">
+                            第三道门
+                        </div>
+                    </div>
+                    <div class="doorDiv">
+                        <div id="door4" class="door" style="display: none;">
+                            第四道门
+                        </div>
+                    </div>
+                    
+                </div>
             </div>
         </div>
     </body>

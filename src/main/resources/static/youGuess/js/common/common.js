@@ -1,4 +1,5 @@
 $(function() {
+    // 鼠标指针
     $(document).bind('mousemove touchmove', function(e) {
         e.preventDefault();
         var drawSize = 10;

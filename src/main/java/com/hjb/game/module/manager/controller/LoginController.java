@@ -31,9 +31,9 @@ public class LoginController {
         String password = MapUtils.getStringFromMapNotNull(map, "password");
         User user = loginService.login(userName, password);
         if (user == null) {
-            throw new GameException(-99, "查询用户失败");
+            throw new GameException(-99, "用户名或密码不正确");
         }
-        logger.info("userName: {}", user.getUserName());
+        logger.info("userName: {}", user.getUsername());
         Map<String, Object> result = new HashMap<>();
         result.put("user", user);
         return ResultUtils.success(result);

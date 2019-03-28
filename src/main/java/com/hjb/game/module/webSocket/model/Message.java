@@ -9,14 +9,15 @@ public class Message {
     private String image;
     private String roomName;
     private Date date;
-    private User user;
-    private List<User> roomUsers;
+    private Player user;
+    private List<Player> roomUsers;
     private String painter;
     private int gameStatus;
     private String roomMaster;
     private String exitUserName;
     private int gameTime;
     private String answer;
+    private Date startTime;
 
     public int getType() {
         return type;
@@ -58,19 +59,19 @@ public class Message {
         this.date = date;
     }
 
-    public User getUser() {
+    public Player getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Player user) {
         this.user = user;
     }
 
-    public List<User> getRoomUsers() {
+    public List<Player> getRoomUsers() {
         return roomUsers;
     }
 
-    public void setRoomUsers(List<User> roomUsers) {
+    public void setRoomUsers(List<Player> roomUsers) {
         this.roomUsers = roomUsers;
     }
 
@@ -120,5 +121,13 @@ public class Message {
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 }

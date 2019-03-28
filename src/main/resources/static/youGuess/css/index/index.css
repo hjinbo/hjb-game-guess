@@ -1,0 +1,64 @@
+.indexBack {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.tipDiv {
+    position: relative;
+    margin: 60px auto;
+    width: 400px;
+    height: 100px;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    user-select: none;
+    -webkit-user-select: none;
+    color: white;
+    padding: 20px;
+    word-break: break-all;
+}
+.tip:hover {
+    color: #a78cea;
+}
+.access-text:hover {
+    color: white;
+}
+.entranceDivBack {
+    margin-top: 150px;
+}
+.entranceDiv {
+    margin: 0 auto;
+}
+.doorDiv {
+    width: 33.3%;
+    float: left;
+    margin: 20px 0;
+    perspective: 500px;
+}
+.door {
+    width: 220px;
+    height: 45px;
+    background-color: rgba(0, 0, 0, 0.5);
+    text-align: center;
+    line-height: 45px;
+    color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    overflow: hidden;
+    /* text-transform: uppercase; */
+    letter-spacing: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+    margin: 0 auto;
+}
+.door:hover {
+    /* background-color: rgba(255, 255, 255); */
+    color: rgba(255, 255, 255);
+    /* transform: rotate3d(1, 0, 0, 45deg) scale(1.2); */
+    transform: scale(1.2);
+    -webkit-transition: all 0.8s ease;
+    transition: all 0.8s ease;
+}

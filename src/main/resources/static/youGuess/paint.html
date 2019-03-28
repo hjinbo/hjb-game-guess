@@ -1,0 +1,131 @@
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>画一画/猜一猜</title>
+        <script src="js/jquery-3.3.1.min.js"></script>
+        <script src="layui/layui.all.js"></script>
+        <script src="js/paint/painting.js"></script>
+        <script src="js/paint/other.js"></script>
+        <link rel="stylesheet" href="layui/css/layui.css">
+        <link rel="stylesheet" href="css/paint/main.css">
+        <link rel="stylesheet" href="css/paint/top.css">
+        <link rel="stylesheet" href="css/paint/middle.css">
+        <link rel="stylesheet" href="css/paint/bottom.css">
+        <link rel="stylesheet" href="css/paint/scoreBoard.css">
+    </head>
+    <body>
+        <div class="picBack"></div>
+        <div class="back">
+            <span id="gameTime"></span>
+            <button id="startGame" style="display: none;">startGame</button>
+            <!-- <input id="userName" placeholder="用户名" type="text"/>
+            <input id="roomName" placeholder="房间名" type="text"/>
+            <button id="connect">connect</button> -->
+            <button id="exit">exit</button>
+            <div class="tip-top"></div>
+            <div class="body-middle">
+                <div class="user-left">
+                    <span class="user" id="user1" style="display: block;">
+                        <img src="#"/><span class="username">user1</span>
+                    </span>
+                    <span class="user" id="user2" style="display: none;">
+                        <img src="#"/><span class="username">user2</span>
+                    </span>
+                    <span class="user" id="user3" style="display: none;">
+                        <img src="#"/><span class="username">user3</span>
+                    </span>
+                    <span class="user" id="user4" style="display: none;">
+                        <img src="#"/><span class="username">user4</span>
+                    </span>
+                </div>
+                <div class="paint-board-div">
+                    <img id="img" width="450px" height="450px" style="display: none;"/>
+                    <canvas id="paint-board" width="450" height="450">browser not support</canvas>
+                </div>
+                <div class="user-right">
+                    <span class="user" id="user5" style="display: none;">
+                        <img src="#"/><span class="username">user5</span>
+                    </span>
+                    <span class="user" id="user6" style="display: none;">
+                        <img src="#"/><span class="username">user6</span>
+                    </span>
+                    <span class="user" id="user7" style="display: none;">
+                        <img src="#"/><span class="username">user7</span>
+                    </span>
+                    <span class="user" id="user8" style="display: none;">
+                        <img src="#"/><span class="username">user8</span>
+                    </span>
+                </div>
+                <div class="chat-right">
+                    <div id="message"></div>
+                    <div class="chooseEmotionDiv" style="display: none;">
+                        <span class="emoti">😃</span>
+                        <span class="emoti">😭</span>
+                        <span class="emoti">😓</span>
+                        <span class="emoti">😏</span>
+                        <span class="emoti">😎</span>
+                        <span class="emoti">😶</span>
+                        <span class="emoti">😵</span>
+                        <span class="emoti">😒</span>
+                    </div>
+                    <div class="btn">
+                        <textarea id="content"></textarea>
+                        <div id="emotion">
+                            <img id="emPic" src="pic/emotion.png"/>
+                        </div>
+                        <button id="send">发送</button>
+                    </div>
+                </div>
+            </div>
+            <div class="operator-bottom">
+                <div class="lineWidthDiv">
+                    <span class="lineWidth" title="1">1️⃣</span>
+                    <span class="lineWidth" title="3">3️⃣</span>
+                    <span class="lineWidth" title="5">5️⃣</span>
+                    <span class="lineWidth" title="10">🔟</span>
+                </div>
+                <div class="colorChoose">
+                    <input type="color" id="colorSelector"/>
+                </div>
+            </div>
+            <div class="scoreBoard" style="display: none;">
+                <div class="answer">本轮答案: 这是答案</div>
+                <hr/>
+                <div class="scores">
+                    <div class="scores-row row0" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                    <div class="scores-row row1" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                    <div class="scores-row row2" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                    <div class="scores-row row3" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                    <div class="scores-row row4" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                    <div class="scores-row row5" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                    <div class="scores-row row6" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                    <div class="scores-row row7" style="display: none;">
+                        <span class="name">nevermore</span>
+                        <span class="score">99</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

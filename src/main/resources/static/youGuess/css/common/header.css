@@ -1,0 +1,162 @@
+.breadCrumb {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #101010;
+}
+.header-ul .header-li {
+    float: right;
+    width: 80px;
+    height: 50px;
+    line-height: 50px;
+    margin: 0 10px;
+}
+.header-ul .header-li .text {
+    width: inherit;
+    height: 47px;
+    text-align: center;
+    color: #9d9d9d;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.header-ul .header-li .text-bottom {
+    width: inherit;
+    height: 3px;
+    border-radius: 5px;
+    margin: 0 auto;
+    
+}
+/* .header-li:last-child {
+    border-bottom: 3px solid orange;
+} */
+.header-ul .header-li .text:hover {
+    color: #fff;
+    background-color: #9d9d9d;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}
+.header-ul .header-li .text:hover+.text-bottom {
+    background-color: orange;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}
+.personInfoDiv {
+    position: relative;
+    top: -3px;
+}
+.personInfoDiv span {
+    display: block;
+    text-align: center;
+    line-height: 40px;
+    background-color: #101010;
+    border-top: 1px solid #9d9d9d;
+    color: #9d9d9d;
+}
+.personInfoDiv span:hover {
+    color: #fff;
+    background-color: #9d9d9d;
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}
+
+/* 选择头像 */
+.imgChooseDiv {
+    position: relative;
+    top: 60px;
+    z-index: 20;
+    width: 450px;
+    height: 500px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 20px;
+}
+.imgChooseDiv .preview {
+    width: 60px;
+    height: 60px;
+    margin-left: 15px;
+    border-radius: 60px;
+    border: 1px solid #9d9d9d;
+    box-shadow: inset 0px 0px 10px 0px #aaa;
+    background-image: url("../../pic/img/hometx.png");
+    background-repeat: no-repeat;
+    background-position-x: 0;
+}
+.imgChooseDiv .defaultImgsDiv {
+    width: 420px;
+    height: 300px;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+.imgChooseDiv .defaultImgsDiv .defaultImgDiv {
+    width: 60px;
+    height: 60px;
+    margin: 5px;
+    background-color: orange;
+    background-image: url("../../pic/img/hometx.png");
+    background-repeat: no-repeat;
+    background-position-x: 0;
+    float: left;
+    border-radius: 5px;
+}
+.imgChooseDiv .defaultImgsDiv .defaultImgDiv:hover {
+    transform: scale(1.1);
+    -webkit-transition: all 0.3s linear;
+    transition: all 0.3s linear;
+}
+.imgChooseDiv .bottom-btn {
+    margin: 0px auto;
+    margin-top: 60px;
+    width: 100%;
+    height: 45px;
+}
+.imgChooseDiv .bottom-btn .save, .imgChooseDiv .bottom-btn .cancel {
+    width: 150px;
+    height: 45px;
+    background-color: #4acad9;
+    text-align: center;
+    line-height: 45px;
+    color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+    float: left;
+    margin-left: 45px;
+}
+.imgChooseDiv .bottom-btn .save:hover {
+    background-color: #06e978;
+}
+.imgChooseDiv .bottom-btn .cancel:hover {
+    background-color: #ee1645;
+}
+
+
+
+
+
+
+/* 导航栏滑块动画(bug暂不使用) */
+.moveTextDiv {
+    width: 60px;
+    height: 47px;
+    background-color: #9d9d9d;
+    animation: move 1s ease;
+}
+
+@-webkit-keyframes move {
+    100% {
+        transform: translateX(-107px);
+    }
+}
+
+@keyframes move {
+    100% {
+        transform: translateX(-107px);
+    }
+}

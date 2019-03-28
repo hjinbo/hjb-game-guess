@@ -23,4 +23,4 @@ mybatis:
 #    ip-address: 127.0.0.1
 #    prefer-ip-address: true
 server:
-  port: 8082
+  port: 8083

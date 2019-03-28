@@ -13,7 +13,7 @@
     border-radius: 10px;
 }
 .user-left {
-    margin-left: 200px;
+    margin-left: 100px;
     box-shadow: 0 0 10px #aaa;
 }
 .paint-board-div {
@@ -39,6 +39,9 @@
     line-height: 40px;
     text-align: center;
     overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
 }
 .user .roomMasterSign {
     position: relative;
@@ -49,7 +52,7 @@
     top: 0;
     left: -40px;
     height: 15px;
-    margin: -6;
+    margin: -6px;
 }
 .user:hover {
     box-shadow: 0 0 10px #aaa;
@@ -87,7 +90,7 @@
 .userInfo {
     margin-left: 10px;
     word-break: break-all;
-    font-size: small;
+    font-size: 20px;
     width: 80%;
     border-radius: 10px;
     background-color: #f5eeee;
@@ -106,6 +109,7 @@
     outline: none;
     padding: 5px;
     float: left;
+    font-size: 20px;
 }
 .btn #send {
     width: 35px;
@@ -114,28 +118,33 @@
     cursor: pointer;
 }
 .btn #emotion {
-    width: 25px;
-    height: 45px;
-    line-height: 45px;
-    margin-left: 5px;
+    display: inline;
+    margin-left: 2px;
     cursor: pointer;
 }
+.btn #emotion #emPic {
+    margin-top: 5px;
+}
 .chat-right .chooseEmotionDiv {
+    padding: 5px;
     position: absolute;
     z-index: 2;
-    margin-top: -50px;
-    margin-left: 10px;
-    width: 180px;
-    height: 60px;
+    margin-top: -150px;
+    margin-left: 25px;
+    width: 145px;
+    height: 200px;
     border-radius: 10px;
     background-color: white;
     box-shadow: 0 0 10px #4e4848;
+    font-size: 32px;
+    overflow-y: auto;
 }
 .chat-right .chooseEmotionDiv .emoti {
     transition: all 0.6s;
     margin: 5px;
     cursor: pointer;
+    transition: all 0.6s;
 }
 .chat-right .chooseEmotionDiv .emoti:hover {
-    transform: scale(1.2);
+    color: orange;
 }

@@ -9,8 +9,10 @@ $(function() {
         if (isNull($(this).val())) {
             $(this).css("border-color", "red");
             $(this).addClass("shake animated");
+            $(".userName-label").addClass("shake animated");
             setTimeout(() => {
                 $(this).removeClass("shake animated");
+                $(".userName-label").removeClass("shake animated");
             }, 1000);
         }
     });
@@ -25,8 +27,10 @@ $(function() {
         if (isNull($(this).val())) {
             $(this).css("border-color", "red");
             $(this).addClass("shake animated");
+            $(".password-label").addClass("shake animated");
             setTimeout(() => {
                 $(this).removeClass("shake animated");
+                $(".password-label").removeClass("shake animated");
             }, 1000);
         }
     });
@@ -43,8 +47,10 @@ $(function() {
         if (isNull($(this).val())) {
             $(this).css("border-color", "red");
             $(this).addClass("shake animated");
+            $(".userName-label").addClass("shake animated");
             setTimeout(() => {
                 $(this).removeClass("shake animated");
+                $(".userName-label").removeClass("shake animated");
             }, 1000);
         }
     });
@@ -59,8 +65,10 @@ $(function() {
         if (isNull($(this).val())) {
             $(this).css("border-color", "red");
             $(this).addClass("shake animated");
+            $(".password-label").addClass("shake animated");
             setTimeout(() => {
                 $(this).removeClass("shake animated");
+                $(".password-label").removeClass("shake animated");
             }, 1000);
         }
     });
@@ -75,8 +83,10 @@ $(function() {
         if (isNull($(this).val())) {
             $(this).css("border-color", "red");
             $(this).addClass("shake animated");
+            $(".password-again-label").addClass("shake animated");
             setTimeout(() => {
                 $(this).removeClass("shake animated");
+                $(".password-again-label").removeClass("shake animated");
             }, 1000);
         } else if ($(this).val() !== $("#reg-password").val()) {
             layer.msg("两次密码不一致", {icon: 7, shift: 0, time: 2000});
@@ -89,4 +99,21 @@ $(function() {
         }
     });
     
+    $("#reg-nickName").blur(function() {
+        if (isNull($(this).val())) {
+            $(this).css("border-color", "red");
+            $(this).addClass("shake animated");
+            $(".nickName-label").addClass("shake animated");
+            setTimeout(() => {
+                $(this).removeClass("shake animated");
+                $(".nickName-label").removeClass("shake animated");
+            }, 1000);
+        }
+    });
+
+    $("#reg-nickName").bind("input propertychange",function(event){
+        if (!isNull($(this).val())) {
+            $(this).css("border-color", "#222");
+        }
+    });
 })

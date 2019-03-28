@@ -5,8 +5,12 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="ID" jdbcType="DECIMAL" property="id" />
-    <result column="USERNAME" jdbcType="VARCHAR" property="username" />
-    <result column="PASSWORD" jdbcType="VARCHAR" property="password" />
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
+    <result column="register_time" jdbcType="TIMESTAMP" property="registerTime" />
+    <result column="change_password_time" jdbcType="TIMESTAMP" property="changePasswordTime" />
   </resultMap>
 </mapper>

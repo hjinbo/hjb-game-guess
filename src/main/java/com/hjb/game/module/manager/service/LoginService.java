@@ -15,8 +15,15 @@ public class LoginService {
 
     public User login(String userName, String password) {
         WeekendSqls<User> sqls = WeekendSqls.custom();
-        sqls.andEqualTo(User :: getUserName, userName);
+        sqls.andEqualTo(User :: getUsername, userName);
         sqls.andEqualTo(User :: getPassword, password);
+        Example example = Example.builder(User.class).where(sqls).build();
+        return userMapper.selectOneByExample(example);
+    }
+
+    public User getUserByUserName(String userName) {
+        WeekendSqls<User> sqls = WeekendSqls.custom();
+        sqls.andEqualTo(User :: getUsername, userName);
         Example example = Example.builder(User.class).where(sqls).build();
         return userMapper.selectOneByExample(example);
     }

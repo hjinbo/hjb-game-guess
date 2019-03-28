@@ -18,9 +18,9 @@ html {
     position: relative;
     width: 100%;
     height: 100%;
-    background-image: url("../../pic/Mercury.png"); 
+    /* background-image: url("../../pic/Mercury.png");  */
     background-repeat: no-repeat;
     background-size: cover;
-    -webkit-filter: blur(5px);
-    filter: blur(5px);
+    /* -webkit-filter: blur(1px);
+    filter: blur(1px); */
 }

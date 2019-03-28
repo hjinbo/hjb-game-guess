@@ -2,12 +2,16 @@ package com.hjb.game.module.webSocket.model;
 
 import java.util.Date;
 
-public class User {
+public class Player {
     private String userName;
     private int identity;
     private boolean roomMaster;
     private Date loginDate;
     private Date rightAnswerTime;
+    private int timeInterval;
+    private int score;
+    private String nickName;
+    private String img;
 
     public String getUserName() {
         return userName;
@@ -33,7 +37,6 @@ public class User {
         this.roomMaster = roomMaster;
     }
 
-
     public Date getLoginDate() {
         return loginDate;
     }
@@ -48,5 +51,37 @@ public class User {
 
     public void setRightAnswerTime(Date rightAnswerTime) {
         this.rightAnswerTime = rightAnswerTime;
+    }
+
+    public int getTimeInterval() {
+        return timeInterval;
+    }
+
+    public void setTimeInterval(int timeInterval) {
+        this.timeInterval = timeInterval;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

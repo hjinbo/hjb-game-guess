@@ -58,13 +58,14 @@ $(function() {
         }
     }
 
-    $(".header-ul .header-li .changeImg").click(function() {
+    $(".changeImg").click(function() {
         imgInit();
+        $(".infoDiv").css("display", "none");
         $(".imgChooseDiv").css("display", "");
 
     });
 
-    $(".save").click(function() {
+    $("#saveImg").click(function() {
         var imgUrl = $(".preview").css("background-image");
         imgUrl = imgUrl.split("(")[1].split(")")[0]; // 获得url()括号内的内容
         // imgUrl = imgUrl.replace(new RegExp("\"","gm"), ""); // 去掉引号
@@ -108,7 +109,7 @@ $(function() {
         });
     });
 
-    $(".cancel").click(function() {
+    $("#cancelImg").click(function() {
         $(".imgChooseDiv").css("display", "none");
     });
 
@@ -117,4 +118,93 @@ $(function() {
         $(".preview").css("background-position-y", $(this).css("background-position-y"));
     });
 
+    // 完善信息
+    $(".changeInfo").click(function() {
+        $(".imgChooseDiv").css("display", "none");
+        $(".infoDiv").css("display", "");
+        $("#reg-userName").val("");
+        $("#reg-nickName").val(sessionStorage.getItem("nickName"));
+        $("#reg-password").val("");
+        $("#reg-password-again").val("");
+    });
+
+    function validate() {
+        return isNull($("#reg-userName").val()) || isNull($("#reg-password").val()) 
+            || isNull($("#reg-password-again").val()) || isNull($("#reg-nickName").val());
+        
+    }
+
+    $("#saveInfo").click(function() {
+        var id = sessionStorage.getItem("id");
+        var originUserName = sessionStorage.getItem("userName");
+        if (!validate()) {
+            $.ajax({
+                type: 'post',
+                contentType: 'application/json;charset=utf-8',
+                url: "/game/changeInfo",
+                data: JSON.stringify({
+                    userName: $("#reg-userName").val(),
+                    password: $("#reg-password").val(),
+                    nickName: $("#reg-nickName").val(),
+                    id: id
+                }),
+                success: function(data) {
+                    if (data.result.changeInfoResult) {
+                        var user = data.result.user;
+                        sessionStorage.setItem("userName", user.username);
+                        sessionStorage.setItem("nickName", user.nickname);
+                        sessionStorage.setItem("id", user.id);
+                        layer.msg("完善信息成功", {
+                            time: 1000,
+                            shift: 0
+                        }, function() {
+                            $(".infoDiv").css("display", "none");
+                        });
+                    } else {
+                        layer.msg("完善信息失败");
+                    }
+                },
+                error: function(data) {
+                    if (data.readyState === 0) {
+                        layer.msg("无服务");
+                    } else {
+                        layer.msg("完善信息失败: " + data.responseJSON.message);
+                    }
+                }
+            });
+        } else {
+            if (isNull($("#reg-userName").val())) {
+                $("#reg-userName").css("border-color", "red");
+                $("#reg-userName").addClass("shake animated");
+                setTimeout(() => {
+                    $("#reg-userName").removeClass("shake animated");
+                }, 1000);
+            }
+            if (isNull($("#reg-password").val())) {
+                $("#reg-password").css("border-color", "red");
+                $("#reg-password").addClass("shake animated");
+                setTimeout(() => {
+                    $("#reg-password").removeClass("shake animated");
+                }, 1000);
+            }
+            if (isNull($("#reg-password-again").val())) {
+                $("#reg-password-again").css("border-color", "red");
+                $("#reg-password-again").addClass("shake animated");
+                setTimeout(() => {
+                    $("#reg-password-again").removeClass("shake animated");
+                }, 1000);
+            }
+            if (isNull($("#reg-nickName").val())) {
+                $("#reg-nickName").css("border-color", "red");
+                $("#reg-nickName").addClass("shake animated");
+                setTimeout(() => {
+                    $("#reg-nickName").removeClass("shake animated");
+                }, 1000);
+            }
+        }
+    });
+
+    $("#cancelInfo").click(function() {
+        $(".infoDiv").css("display", "none");
+    });
 })

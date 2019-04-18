@@ -51,7 +51,7 @@ $(function() {
             setTimeout(() => {
                 $(this).removeClass("shake animated");
                 $(".userName-label").removeClass("shake animated");
-            }, 1000);
+            }, 300);
         }
     });
 
@@ -116,4 +116,43 @@ $(function() {
             $(this).css("border-color", "#222");
         }
     });
+    // 注册表单校验结束
+
+    // 邮箱登录方式校验
+    $("#email").blur(function() {
+        if (isNull($(this).val())) {
+            $(this).css("border-color", "red");
+            $(this).addClass("shake animated");
+            $(".email-label").addClass("shake animated");
+            setTimeout(() => {
+                $(this).removeClass("shake animated");
+                $(".email-label").removeClass("shake animated");
+            }, 1000);
+        }
+    });
+
+    $("#email").bind("input propertychange",function(event){
+        if (!isNull($(this).val())) {
+            $(this).css("border-color", "#222");
+        }
+    });
+
+    $("#code").blur(function() {
+        if (isNull($(this).val())) {
+            $(this).css("border-color", "red");
+            $(this).addClass("shake animated");
+            $(".code-label").addClass("shake animated");
+            setTimeout(() => {
+                $(this).removeClass("shake animated");
+                $(".code-label").removeClass("shake animated");
+            }, 1000);
+        }
+    });
+
+    $("#code").bind("input propertychange",function(event){
+        if (!isNull($(this).val())) {
+            $(this).css("border-color", "#222");
+        }
+    });
+    // 邮箱登录方式校验结束
 })

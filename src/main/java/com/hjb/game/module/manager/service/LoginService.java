@@ -27,4 +27,12 @@ public class LoginService {
         Example example = Example.builder(User.class).where(sqls).build();
         return userMapper.selectOneByExample(example);
     }
+
+    public User emailLogin(String email, String code) {
+        WeekendSqls<User> sqls = WeekendSqls.custom();
+        sqls.andEqualTo(User :: getEmail, email);
+        sqls.andEqualTo(User :: getVerificationCode, code);
+        Example example = Example.builder(User.class).where(sqls).build();
+        return userMapper.selectOneByExample(example);
+    }
 }

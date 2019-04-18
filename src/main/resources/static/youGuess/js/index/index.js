@@ -11,6 +11,7 @@ $(function() {
     
     init();
     getTip();
+    specialInit();
 
     function init() {
         var userName = sessionStorage.getItem("userName");
@@ -89,4 +90,14 @@ $(function() {
             $(this).removeClass("zoomOut");
         }, 1000);
     });
+
+    // 判断身份
+    function specialInit() {
+        var special = sessionStorage.getItem("special");
+        var date = new Date();
+        console.log("" + (date.getMonth() + 1) + ":" + date.getDate());
+        if (date.getMonth() + 1 === 9 && date.getDate() === 7) {
+            layer.alert("" + special);
+        }
+    }
 })

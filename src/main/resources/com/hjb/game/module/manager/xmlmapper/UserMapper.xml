@@ -12,5 +12,7 @@
     <result column="img" jdbcType="VARCHAR" property="img" />
     <result column="register_time" jdbcType="TIMESTAMP" property="registerTime" />
     <result column="change_password_time" jdbcType="TIMESTAMP" property="changePasswordTime" />
+    <result column="verification_code" jdbcType="VARCHAR" property="verificationCode" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
   </resultMap>
 </mapper>

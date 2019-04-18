@@ -11,13 +11,13 @@
 .operateDiv {
     margin: 80px auto;
     width: 420px;
-    height: 320px;
+    height: 330px;
     padding: 20px;
     box-shadow: inset 0 0 20px 0px #aaa;
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.5);
 }
-.reg-mark-left, .reg-btn {
+.reg-mark-left {
     float: right;
 }
 .reg-mark-left {
@@ -32,31 +32,32 @@
 .reg-mark-left:hover {
     border-color: #f7df0f;
 }
-.reg-btn {
-    width: 65px;
-    height: 30px;
-    line-height: 30px;
+.register {
+    margin-top: 10px;
+    width: 100%;
+    color: #9d9d9d;
     text-align: center;
-    background-color: #4acad9;
-    color: #fff;
-    border-radius: 5px;
-    text-transform: uppercase;
-    font-size: x-small;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
-.reg-btn:hover {
-    background-color: #f7df0f;
+.reg-btn {
+    color: #4acad9;
+    text-transform: uppercase;
+    text-align: center;
 }
-.userName-div, .password-div, .password-again-div, .nickName-div {
+.reg-btn:hover {
+    cursor: pointer;
+    color: #f7df0f;
+}
+.userName-div, .password-div, .password-again-div, .nickName-div, .email-div, .code-div {
     width: 216px;
     margin: 30px auto;
     text-align: left;
     position: relative;
 }
-.userName, .password, .password-again, .nickName {
+.userName, .password, .password-again, .nickName, .email, .code {
     width: 100%;
     height: 40px;
     padding: 10px;
@@ -64,11 +65,35 @@
     border: 2px solid #222;
     border-radius: 5px;
 }
-.userName-label, .password-label, .password-again-label, .nickName-label {
+.code {
+    width: 60%;
+}
+.getCode {
+    float: right;
+    width: 80px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    background-color: #4acad9;
+    border: 2px solid #222;
+    border-radius: 5px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #fff;
+    font-size: 1px;
+}
+.getCode:hover {
+    cursor: pointer;
+    background-color: #f7df0f;
+}
+
+.userName-label, .password-label, .password-again-label, .nickName-label, .email-label, .code-label {
     display: block;
     position: absolute;
-    top: 12px;
-    left: 10px;
+    top: 10px;
+    left: 12px;
     color: #cecece;
     cursor: text;
     text-transform: uppercase;
@@ -96,10 +121,10 @@
     -webkit-user-select: none;
 }
 .splitLine {
-    margin-top: 50px;
+    margin-top: 20px;
 }
 .copyright {
-    margin-top: 30px;
+    margin-top: 20px;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #fff;
@@ -114,11 +139,30 @@
     color: yellow;
 }
 .submit:hover {
+    cursor: pointer;
     background-color: #06e978;
     /* -webkit-transition: all 0.8s linear;
     transition: all 0.8s linear; */
 }
-
+/* 登录方式 */
+.loginTypeDiv {
+    width: 100%;
+    margin-left: 80px;
+}
+.loginType {
+    color: #9d9d9d;
+    display: inline;
+    margin-left: 30px;
+    font-size: 20px;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.loginType:hover {
+    cursor: pointer;
+    color: #fff;
+}
 /* 暂不使用 */
 .glareLogin {
     width: 45px;

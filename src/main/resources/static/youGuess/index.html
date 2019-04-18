@@ -4,13 +4,15 @@
         <title>首页</title>
         <script src="js/jquery-3.3.1.min.js"></script>
         <script src="layui/layui.all.js"></script>
-        <script src="js/common/common.js"></script>
+        <!-- <script src="js/common/common.js"></script> -->
         <script src="js/index/index.js"></script>
         <script src="js/common/paper-full.min.js"></script>
         <script src="js/common/fly.js"></script>
         <script src="js/common/header.js"></script>
+        <script src="js/login/validate.js"></script>
+        <script src="js/login/base.js"></script>
         <link rel="stylesheet" href="layui/css/layui.css" />
-        <link rel="stylesheet" href="css/common/common.css" />
+        <!-- <link rel="stylesheet" href="css/common/common.css" /> -->
         <link rel="stylesheet" href="css/common/header.css" />
         <link rel="stylesheet" href="css/index/index.css" />
         <link rel="stylesheet" href="css/animate.css" />
@@ -29,16 +31,17 @@
                         <div class="text-bottom"></div>
                         <div class="personInfoDiv" style="display: none;">
                             <span class="changeImg">更换头像</span>
-                            <span class="changePassword">修改密码</span>
+                            <span class="changeInfo">完善信息</span>
+                            <!-- <span class="changePassword">修改密码</span> -->
                             <span class="layout">注销登录</span>
                         </div>
                     </li>
                     <li class="header-li">
-                        <div class="text">asdsa</div>
+                        <div class="text">&nbsp;&nbsp;&nbsp;&nbsp;</div>
                         <div class="text-bottom"></div>
                     </li>
                     <li class="header-li">
-                        <div class="text">asd</div>
+                        <div class="text">&nbsp;&nbsp;&nbsp;&nbsp;</div>
                         <div class="text-bottom"></div>
                     </li>
                 </ul>
@@ -72,12 +75,40 @@
                             <div class="defaultImgDiv img-23"></div>
                         </div>
                         <div class="bottom-btn">
-                            <div class="save">
+                            <div id="saveImg" class="save">
                                 save
                             </div>
-                            <div class="cancel">
+                            <div id="cancelImg" class="cancel">
                                 cancel
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="infoDiv" style="display: none;">
+                    <div class="userName-div">
+                        <span>用户名</span>
+                        <input type="text" id="reg-userName" class="userName"/>
+                    </div>
+                    <div class="password-div">
+                        <span>设置密码</span>
+                        <input type="password" id="reg-password" class="password"/>
+                    </div>
+                    <div class="password-again-div">
+                        <span>再次设置</span>
+                        <input type="password" id="reg-password-again" class="password-again"/>
+                    </div>
+                    <div class="nickName-div">
+                        <span>修改呢称</span>
+                        <input type="text" id="reg-nickName" class="nickName"/>
+                    </div>
+                    <div class="bottom-btn">
+                        <div id="saveInfo" class="save">
+                            save
+                        </div>
+                        <div id="cancelInfo" class="cancel">
+                            cancel
                         </div>
                     </div>
                 </div>

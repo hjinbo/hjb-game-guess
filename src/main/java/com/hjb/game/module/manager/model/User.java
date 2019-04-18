@@ -22,6 +22,11 @@ public class User {
     @Column(name = "change_password_time")
     private Date changePasswordTime;
 
+    @Column(name = "verification_code")
+    private String verificationCode;
+
+    private String email;
+
     /**
      * @return id
      */
@@ -118,5 +123,33 @@ public class User {
      */
     public void setChangePasswordTime(Date changePasswordTime) {
         this.changePasswordTime = changePasswordTime;
+    }
+
+    /**
+     * @return verification_code
+     */
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    /**
+     * @param verificationCode
+     */
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode == null ? null : verificationCode.trim();
+    }
+
+    /**
+     * @return email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email
+     */
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 }

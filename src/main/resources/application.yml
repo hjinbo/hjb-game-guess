@@ -24,3 +24,6 @@ mybatis:
 #    prefer-ip-address: true
 server:
   port: 8083
+logging:
+  level:
+    org.apache.http: info

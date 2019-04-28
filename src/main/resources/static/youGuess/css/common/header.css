@@ -17,10 +17,10 @@
     height: 47px;
     text-align: center;
     color: #9d9d9d;
-    user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 .header-ul .header-li .text-bottom {
     width: inherit;
@@ -46,10 +46,10 @@
 .personInfoDiv {
     position: relative;
     top: -3px;
-    user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
+    user-select: none;
 }
 .personInfoDiv span {
     display: block;
@@ -131,8 +131,10 @@
     letter-spacing: 2px;
     font-size: 14px;
     font-weight: 600;
-    user-select: none;
     -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     float: left;
     margin-left: 45px;
 }
